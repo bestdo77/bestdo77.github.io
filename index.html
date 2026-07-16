@@ -1,384 +1,494 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Xinghang Yu (于兴航) — AI infrastructure engineer working on storage systems, high-performance computing, and astronomical data systems.">
-  <meta name="color-scheme" content="light dark">
-  <title>Xinghang Yu · AI Infra &amp; HPC</title>
-  <link rel="stylesheet" href="./styles.css">
-  <script src="./app.js" defer></script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Xinghang Yu · AI Infra & HPC</title>
+<meta name="description" content="Xinghang Yu (于兴航) — AI Infra Engineer, ICPC medalist, first-author ApJS paper. Computer Science, Tianjin University." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --bg:#fdf6ea;
+  --bg-soft:#fffdf9;
+  --panel:rgba(255,255,255,0.9);
+  --panel-brd:rgba(120,80,20,0.14);
+  --ink:#1c1710;
+  --muted:#5c5343;
+  --dim:#756a55;
+  --c1:#f97316;   /* orange (fills/borders/gradients) */
+  --c1b:#facc15;  /* gold/yellow (gradient partner) */
+  --c1t:#c2410c;  /* deep orange (text, AA on white) */
+  --c2:#0e7490;   /* teal   */
+  --c3:#db2777;   /* pink   */
+  --c4:#16a34a;   /* green  */
+  --glow:0 18px 50px -20px rgba(249,115,22,.4);
+  --sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,'PingFang SC','Microsoft YaHei',sans-serif;
+  --display:'Manrope',var(--sans);
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --maxw:1200px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--sans);
+  background:var(--bg);
+  color:var(--ink);
+  line-height:1.65;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  text-rendering:optimizeLegibility;
+  font-feature-settings:"kern","liga","calt";
+  letter-spacing:-0.005em;
+}
+/* ---------- soft light backdrop ---------- */
+#space{position:fixed;inset:0;z-index:-2;background:
+  radial-gradient(1200px 700px at 80% -10%, rgba(249,115,22,.14), transparent 60%),
+  radial-gradient(1000px 600px at 0% 15%, rgba(250,204,21,.16), transparent 55%),
+  radial-gradient(900px 700px at 55% 110%, rgba(251,146,60,.10), transparent 60%),
+  var(--bg);}
+#stars{position:fixed;inset:0;z-index:-1;display:block}
+.grain{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.02;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+
+/* ---------- layout ---------- */
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 32px}
+section{padding:88px 0;position:relative}
+#research{padding-top:89px}
+.eyebrow{font-family:var(--mono);font-size:.78rem;letter-spacing:.28em;text-transform:uppercase;color:var(--c2);margin-bottom:16px;display:flex;align-items:center;gap:18px}
+.eyebrow::before{content:"";width:44px;height:1px;background:linear-gradient(90deg,var(--c2),transparent)}
+h2.title{font-family:var(--display);font-size:clamp(1.6rem,3vw,2.3rem);font-weight:700;line-height:1.12;letter-spacing:-.02em;margin-bottom:12px}
+.lead{color:var(--muted);max-width:640px;font-size:1.02rem}
+
+/* ---------- nav ---------- */
+nav{position:fixed;top:0;left:0;right:0;z-index:50;display:flex;align-items:center;justify-content:space-between;
+  padding:16px 28px;transition:.35s;backdrop-filter:blur(0px)}
+nav.scrolled{background:rgba(255,255,255,.78);backdrop-filter:blur(14px);border-bottom:1px solid var(--panel-brd);padding:12px 28px}
+.brand{font-family:var(--display);font-weight:700;font-size:1.05rem;letter-spacing:-.01em;display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
+.brand .dot{width:9px;height:9px;border-radius:50%;background:var(--c2);box-shadow:0 0 12px rgba(34,211,238,.7)}
+.navlinks{display:flex;gap:26px;align-items:center}
+.navlinks a{color:var(--muted);text-decoration:none;font-size:.92rem;font-weight:500;transition:.2s;position:relative}
+.navlinks a:hover{color:var(--ink)}
+.navlinks a::after{content:"";position:absolute;left:0;bottom:-5px;width:0;height:2px;background:linear-gradient(90deg,var(--c1),var(--c2));transition:.25s}
+.navlinks a:hover::after{width:100%}
+.langbtn{font-family:var(--mono);cursor:pointer;background:rgba(249,115,22,.12);border:1px solid var(--panel-brd);color:var(--ink);
+  padding:7px 13px;border-radius:9px;font-size:.8rem;font-weight:500;transition:.2s;letter-spacing:.05em}
+.langbtn:hover{background:rgba(249,115,22,.22);border-color:var(--c1)}
+.navtoggle{display:none;background:none;border:none;color:var(--ink);font-size:1.5rem;cursor:pointer}
+
+/* ---------- hero ---------- */
+.hero{min-height:auto;display:grid;grid-template-columns:1.5fr 1fr;gap:56px;align-items:center;padding-top:108px;padding-bottom:56px}
+.hero-text{min-width:0}
+.hero .status{display:inline-flex;align-items:center;gap:9px;font-family:var(--mono);font-size:.82rem;color:var(--c4);
+  background:rgba(74,222,128,.08);border:1px solid rgba(74,222,128,.22);padding:6px 14px;border-radius:999px;margin-bottom:26px;width:fit-content}
+.hero .status .pulse{width:8px;height:8px;border-radius:50%;background:var(--c4);box-shadow:0 0 0 0 rgba(74,222,128,.6);animation:pulse 2s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(74,222,128,.5)}70%{box-shadow:0 0 0 10px rgba(74,222,128,0)}100%{box-shadow:0 0 0 0 rgba(74,222,128,0)}}
+.hero h1{font-family:var(--display);font-weight:700;font-size:clamp(2rem,3.6vw,2.9rem);line-height:1.05;letter-spacing:-.02em;margin-bottom:8px}
+.hero h1 .grad{color:var(--ink)}
+.hero .zh{font-family:var(--display);font-size:clamp(1rem,2.4vw,1.35rem);color:var(--dim);font-weight:500;margin-bottom:18px;letter-spacing:.12em}
+.hero .role{font-size:clamp(1rem,1.8vw,1.2rem);color:var(--muted);max-width:560px;margin-bottom:12px}
+.hero .role b{color:var(--ink);font-weight:600}
+.hero .sub{color:var(--dim);max-width:540px;margin-bottom:22px;font-size:.98rem}
+/* scannable credential chips */
+.creds{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:30px}
+.cred{display:inline-flex;align-items:center;gap:8px;font-size:.9rem;font-weight:600;color:var(--ink);
+  background:var(--panel);border:1px solid var(--panel-brd);padding:9px 15px;border-radius:11px;
+  box-shadow:0 6px 18px -12px rgba(28,40,80,.4);transition:.22s}
+.cred:hover{transform:translateY(-2px);border-color:var(--ac,var(--c1))}
+.cred .ci{font-size:1.05rem;line-height:1}
+.cred .ck{color:var(--ac,var(--c1t));font-weight:700}
+.cta{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.btn{display:inline-flex;align-items:center;gap:9px;text-decoration:none;font-weight:600;font-size:.95rem;padding:13px 24px;border-radius:12px;transition:.25s;cursor:pointer;border:1px solid transparent}
+.btn.primary{background:linear-gradient(120deg,var(--c1),var(--c1b));color:#fff;box-shadow:0 12px 28px -10px rgba(249,115,22,.5)}
+.btn.primary:hover{transform:translateY(-3px);box-shadow:0 18px 38px -10px rgba(249,115,22,.65)}
+.btn.ghost{background:rgba(255,255,255,.7);border-color:var(--panel-brd);color:var(--ink)}
+.btn.ghost:hover{border-color:var(--c2);background:rgba(34,211,238,.08);transform:translateY(-3px)}
+.hero .socials{display:flex;gap:18px;margin-top:32px;flex-wrap:wrap}
+.hero .socials a{color:var(--dim);text-decoration:none;font-size:.88rem;font-family:var(--mono);transition:.2s;display:flex;align-items:center;gap:7px}
+.hero .socials a:hover{color:var(--c2)}
+
+/* hero photo */
+.hero-visual{position:relative;display:flex;align-items:center;justify-content:flex-end;padding-right:28px}
+.photo-card{position:relative;width:min(340px,100%);border-radius:20px;overflow:hidden;
+  border:1px solid var(--panel-brd);box-shadow:0 26px 60px -28px rgba(28,40,80,.4)}
+.photo-card img{display:block;width:100%;height:auto;object-fit:cover}
+.photo-cap{position:absolute;left:0;right:0;bottom:0;padding:26px 18px 14px;
+  font-family:var(--mono);font-size:.74rem;letter-spacing:.06em;color:#fff;
+  background:linear-gradient(to top,rgba(0,0,0,.55),transparent)}
+
+/* ---------- about ---------- */
+.about-grid{display:grid;grid-template-columns:1.35fr 1.05fr;gap:44px;align-items:stretch}
+.about-grid p{color:var(--muted);margin-bottom:16px;font-size:1.02rem}
+.about-grid p b{color:var(--ink)}
+.info-card{background:var(--panel);border:1px solid var(--panel-brd);border-radius:18px;padding:30px 32px;backdrop-filter:blur(12px);display:flex;flex-direction:column;height:100%}
+.info-card h4{font-family:var(--display);font-size:.78rem;letter-spacing:.2em;text-transform:uppercase;color:var(--c2);margin-bottom:8px}
+.info-card .info-rows{display:flex;flex-direction:column;justify-content:space-between;flex:1}
+.info-row{display:flex;justify-content:space-between;gap:12px;padding:11px 0;border-bottom:1px dashed rgba(120,140,220,.14);font-size:.92rem}
+.info-row:last-child{border-bottom:none}
+.info-row .k{color:var(--dim)}
+.info-row .v{color:var(--ink);text-align:right;font-weight:500}
+
+/* ---------- timeline ---------- */
+.timeline{position:relative;margin-left:8px}
+.timeline::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:2px;background:linear-gradient(180deg,var(--c1),var(--c2),transparent)}
+.titem{position:relative;padding:0 0 40px 40px}
+.titem:last-child{padding-bottom:0}
+.titem::before{content:"";position:absolute;left:0;top:5px;width:16px;height:16px;border-radius:50%;background:var(--bg);border:3px solid var(--c1);box-shadow:0 0 0 4px rgba(249,115,22,.15)}
+.titem .when{font-family:var(--mono);font-size:.8rem;color:var(--c2);margin-bottom:6px}
+.titem h3{font-family:var(--display);font-size:1.22rem;font-weight:600;margin-bottom:3px}
+.titem .org{color:var(--dim);font-size:.92rem;margin-bottom:12px}
+.tim-list{list-style:none}
+.tim-list li{color:var(--muted);font-size:.95rem;padding-left:20px;position:relative;margin-bottom:9px}
+.tim-list li::before{content:"▹";position:absolute;left:0;color:var(--c2)}
+
+/* ---------- projects ---------- */
+.proj{background:var(--panel);border:1px solid var(--panel-brd);border-radius:20px;padding:32px;backdrop-filter:blur(12px);margin-bottom:26px;transition:.3s;position:relative;overflow:hidden}
+.proj:hover{border-color:rgba(34,211,238,.4);transform:translateY(-4px)}
+.proj .glow{position:absolute;top:-60px;right:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(249,115,22,.20),transparent 70%);pointer-events:none}
+.proj-head{display:flex;justify-content:space-between;align-items:flex-start;gap:20px;flex-wrap:wrap;margin-bottom:6px}
+.proj h3{font-family:var(--display);font-size:1.4rem;font-weight:600;line-height:1.2}
+.proj .badge{font-family:var(--mono);font-size:.74rem;color:var(--c4);background:rgba(74,222,128,.10);border:1px solid rgba(74,222,128,.25);padding:5px 11px;border-radius:8px;white-space:nowrap}
+.proj .meta{color:var(--dim);font-size:.88rem;margin-bottom:18px;font-family:var(--mono)}
+.proj-list{list-style:none;margin-bottom:18px}
+.proj-list li{color:var(--muted);font-size:.96rem;padding-left:22px;position:relative;margin-bottom:11px}
+.proj-list li::before{content:"◆";position:absolute;left:0;color:var(--c1t);font-size:.7rem;top:5px}
+.proj-list li b{color:var(--ink)}
+.metric-row{display:flex;gap:26px;flex-wrap:wrap;padding-top:16px;border-top:1px solid var(--panel-brd)}
+.metric{display:flex;flex-direction:column}
+.metric .m{font-family:var(--display);font-size:1.5rem;font-weight:700;color:var(--c2)}
+.metric .d{color:var(--dim);font-size:.78rem;font-family:var(--mono)}
+
+/* ---------- honors ---------- */
+.honors{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}
+.honor{display:flex;gap:16px;align-items:center;background:var(--panel);border:1px solid var(--panel-brd);border-radius:14px;padding:20px 22px;backdrop-filter:blur(10px);transition:.25s}
+.honor:hover{transform:translateX(6px);border-color:rgba(244,114,182,.4)}
+.honor .medal{font-size:1.9rem;line-height:1;filter:drop-shadow(0 3px 6px rgba(28,40,80,.2))}
+.honor .txt h4{font-family:var(--display);font-size:1.02rem;font-weight:600;margin-bottom:3px}
+.honor .txt p{color:var(--dim);font-size:.84rem}
+
+/* ---------- research ---------- */
+.paper{background:linear-gradient(135deg,rgba(249,115,22,.10),rgba(14,116,144,.06));border:1px solid var(--panel-brd);border-radius:22px;padding:38px;backdrop-filter:blur(12px);position:relative;overflow:hidden}
+.paper .venue{font-family:var(--mono);font-size:.8rem;color:var(--c3);letter-spacing:.15em;margin-bottom:14px}
+.paper h3{font-family:var(--display);font-size:clamp(1.3rem,3vw,1.75rem);font-weight:700;line-height:1.25;margin-bottom:16px}
+.paper p{color:var(--muted);margin-bottom:22px;max-width:760px}
+.paper .authorline{font-size:.9rem;color:var(--dim);margin-bottom:24px;font-family:var(--mono)}
+.paper .authorline b{color:var(--ink)}
+
+/* ---------- contact ---------- */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;margin-top:8px}
+.contact-intro .lead{max-width:none}
+.contact-cards{display:flex;flex-direction:column;gap:14px}
+.ccard{display:flex;align-items:center;gap:16px;background:var(--panel);border:1px solid var(--panel-brd);border-radius:16px;padding:18px 22px;text-decoration:none;color:var(--ink);backdrop-filter:blur(10px);transition:.28s}
+.ccard:hover{transform:translateY(-4px);border-color:var(--c2);box-shadow:var(--glow)}
+.ccard .ico{font-size:1.6rem;flex-shrink:0;width:32px;text-align:center;line-height:1}
+.ccard .txt{display:flex;flex-direction:column;min-width:0}
+.ccard .lbl{font-family:var(--mono);font-size:.72rem;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;margin-bottom:3px}
+.ccard .val{font-size:.95rem;color:var(--ink);word-break:break-all}
+
+/* ---------- footer ---------- */
+footer{text-align:center;margin-top:48px;padding:40px 24px 60px;color:var(--dim);font-size:.84rem;border-top:1px solid var(--panel-brd);font-family:var(--mono)}
+footer a{color:var(--muted);text-decoration:none}
+footer a:hover{color:var(--c2)}
+
+/* ---------- reveal animation ---------- */
+.reveal{opacity:1}
+.reveal.in{opacity:1}
+
+/* ---------- responsive ---------- */
+@media(max-width:900px){
+  .hero{grid-template-columns:1fr;gap:24px;min-height:auto;padding-top:96px;padding-bottom:20px}
+  .hero-visual{min-height:auto;order:-1;margin-bottom:6px}
+  .photo-card{width:min(300px,80%)}
+}
+@media(max-width:820px){
+  .navlinks{position:fixed;inset:0 0 auto 0;top:0;flex-direction:column;background:rgba(255,255,255,.97);backdrop-filter:blur(20px);padding:90px 30px 40px;gap:22px;transform:translateY(-120%);transition:.4s;height:100vh;justify-content:flex-start}
+  .navlinks.open{transform:none}
+  .navtoggle{display:block;z-index:60}
+  .about-grid{grid-template-columns:1fr;gap:28px}
+  .honors{grid-template-columns:1fr}
+  .contact-grid{grid-template-columns:1fr;gap:24px}
+  section{padding:48px 0}
+}
+</style>
 </head>
 <body>
-  <a class="skip-link" href="#main" data-en="Skip to content" data-zh="跳到正文">Skip to content</a>
-  <div class="page-grain" aria-hidden="true"></div>
+<div id="space"></div>
+<canvas id="stars"></canvas>
+<div class="grain"></div>
 
-  <header class="topbar">
-    <a class="wordmark" href="#top" aria-label="Back to top">
-      <span class="wordmark-mark">XY/26</span>
-      <span class="wordmark-copy">SYSTEMS<br>PORTFOLIO</span>
-    </a>
-    <div class="topbar-center" aria-hidden="true">
-      <span>CS</span>
-      <div class="top-progress"><i id="reading-progress"></i></div>
-      <span>INFRA</span>
+<!-- NAV -->
+<nav id="nav">
+  <a href="#top" class="brand"><span class="dot"></span>Xinghang&nbsp;Yu</a>
+  <div class="navlinks" id="navlinks">
+    <a href="#about" data-en="About" data-zh="关于">About</a>
+    <a href="#experience" data-en="Experience" data-zh="经历">Experience</a>
+    <a href="#projects" data-en="Projects" data-zh="项目">Projects</a>
+    <a href="#honors" data-en="Honors" data-zh="荣誉">Honors</a>
+    <a href="#research" data-en="Research" data-zh="研究">Research</a>
+    <a href="#contact" data-en="Contact" data-zh="联系">Contact</a>
+    <button class="langbtn" id="langbtn" onclick="toggleLang()">中文</button>
+  </div>
+  <button class="navtoggle" id="navtoggle" aria-label="menu">☰</button>
+</nav>
+
+<!-- HERO -->
+<header class="hero wrap" id="top">
+  <div class="hero-text">
+    <div class="status"><span class="pulse"></span><span data-en="Infrastructure · Storage · Astronomy" data-zh="基础架构 · 存储 · 天文">Infrastructure · Storage · Astronomy</span></div>
+    <h1>Xinghang <span class="grad">Yu</span></h1>
+    <div class="zh">于 兴 航</div>
+    <p class="role" data-en="&lt;b&gt;Infra engineer.&lt;/b&gt; I work on storage systems." data-zh="&lt;b&gt;基础架构工程师，&lt;/b&gt;专注分布式存储系统。">
+      <b>Infra engineer.</b> I work on storage systems.
+    </p>
+    <div class="creds">
+      <span class="cred" style="--ac:var(--c1t)"><span class="ci">🏢</span><span class="ck" data-en="ByteDance" data-zh="字节跳动">ByteDance</span>&nbsp;<span data-en="Infra" data-zh="基础架构">Infra</span></span>
+      <span class="cred" style="--ac:var(--c3)"><span class="ci">🥈</span><span class="ck" data-en="ICPC" data-zh="ICPC">ICPC</span>&nbsp;<span data-en="Silver Medalist" data-zh="区域赛银牌">Silver Medalist</span></span>
+      <span class="cred" style="--ac:var(--c2)"><span class="ci">📄</span><span class="ck" data-en="First-author" data-zh="第一作者">First-author</span>&nbsp;<span data-en="paper, ApJS" data-zh="论文 ApJS">paper, ApJS</span></span>
     </div>
-    <div class="topbar-actions">
-      <span class="source-pill">AI INFRA · HPC</span>
-      <button class="icon-button" id="theme-toggle" type="button" aria-label="Toggle color theme" aria-pressed="false">◐</button>
-      <button class="text-button" id="lang-toggle" type="button" aria-label="Switch language" aria-pressed="false">中文</button>
-      <button class="menu-button" id="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-nav">☰</button>
+    <div class="socials">
+      <a href="https://github.com/bestdo77" target="_blank">◐ github.com/bestdo77</a>
+      <a href="mailto:3023244355@tju.edu.cn">✉ 3023244355@tju.edu.cn</a>
     </div>
-  </header>
-
-  <aside class="chapter-rail" aria-label="Section navigation">
-    <div class="rail-caption">INDEX / 06</div>
-    <nav>
-      <a href="#profile" data-section="profile"><span>01</span><b data-en="Profile" data-zh="关于">Profile</b></a>
-      <a href="#experience" data-section="experience"><span>02</span><b data-en="Experience" data-zh="经历">Experience</b></a>
-      <a href="#work" data-section="work"><span>03</span><b data-en="Systems work" data-zh="系统项目">Systems work</b></a>
-      <a href="#honors" data-section="honors"><span>04</span><b data-en="Honors" data-zh="荣誉">Honors</b></a>
-      <a href="#research" data-section="research"><span>05</span><b data-en="Research" data-zh="研究">Research</b></a>
-      <a href="#contact" data-section="contact"><span>06</span><b data-en="Contact" data-zh="联系">Contact</b></a>
-    </nav>
-    <div class="rail-foot">
-      <span>TIANJIN · CHINA</span>
-      <span>UPDATED · 2026</span>
+  </div>
+  <div class="hero-visual reveal">
+    <div class="photo-card">
+      <img src="assets/photo.jpg" alt="Xinghang Yu" />
+      <div class="photo-cap"><span data-en="West Lake, Hangzhou" data-zh="杭州 · 西湖">West Lake, Hangzhou</span></div>
     </div>
-  </aside>
+  </div>
+</header>
 
-  <nav class="mobile-nav" id="mobile-nav" aria-label="Mobile section navigation">
-    <a href="#profile" data-en="01 · Profile" data-zh="01 · 关于">01 · Profile</a>
-    <a href="#experience" data-en="02 · Experience" data-zh="02 · 经历">02 · Experience</a>
-    <a href="#work" data-en="03 · Systems work" data-zh="03 · 系统项目">03 · Systems work</a>
-    <a href="#honors" data-en="04 · Honors" data-zh="04 · 荣誉">04 · Honors</a>
-    <a href="#research" data-en="05 · Research" data-zh="05 · 研究">05 · Research</a>
-    <a href="#contact" data-en="06 · Contact" data-zh="06 · 联系">06 · Contact</a>
-  </nav>
-
-  <main id="main">
-    <section class="hero" id="top">
-      <div class="hero-grid">
-        <div class="hero-copy" data-reveal>
-          <p class="eyebrow"><span>SYSTEMS PORTFOLIO</span> 2026 · TIANJIN</p>
-          <h1>Xinghang<br><em>Yu.</em></h1>
-          <p class="hero-name-zh">于 兴 航</p>
-          <p class="hero-deck" data-en="&lt;b&gt;Infrastructure engineer.&lt;/b&gt; I work on the storage and systems underneath machine learning — from hot-path concurrency to lightweight scientific inference." data-zh="&lt;b&gt;基础架构工程师。&lt;/b&gt;专注机器学习底层的存储与系统：从核心链路并发优化，到轻量化科学计算推理。">
-            <b>Infrastructure engineer.</b> I work on the storage and systems underneath machine learning — from hot-path concurrency to lightweight scientific inference.
-          </p>
-          <div class="hero-tags" aria-label="Highlights">
-            <span data-en="ByteDance · Infra" data-zh="字节跳动 · 基础架构">ByteDance · Infra</span>
-            <span data-en="ICPC · Silver" data-zh="ICPC · 银牌">ICPC · Silver</span>
-            <span data-en="ApJS · First author" data-zh="ApJS · 第一作者">ApJS · First author</span>
-          </div>
-          <div class="hero-actions">
-            <a class="primary-button" href="#work"><span data-en="Explore systems work" data-zh="查看系统项目">Explore systems work</span><b>↘</b></a>
-            <a class="secondary-button" href="https://github.com/bestdo77" target="_blank" rel="noreferrer">GitHub ↗</a>
-          </div>
-          <dl class="hero-stats">
-            <div><dt>~35%</dt><dd data-en="faster model eviction" data-zh="模型淘汰提速">faster model eviction</dd></div>
-            <div><dt>0</dt><dd data-en="bit-exact FID mismatches" data-zh="逐 bit FID 差异">bit-exact FID mismatches</dd></div>
-            <div><dt>48M/33s</dt><dd data-en="astronomical rows ingested" data-zh="天文数据导入速度">astronomical rows ingested</dd></div>
-          </dl>
-        </div>
-
-        <div class="portrait-stage" data-reveal>
-          <figure class="portrait-card">
-            <img src="./assets/photo.jpg" alt="Portrait of Xinghang Yu at West Lake in Hangzhou">
-            <figcaption><span>XINGHANG YU</span><span data-en="WEST LAKE · HANGZHOU" data-zh="杭州 · 西湖">WEST LAKE · HANGZHOU</span></figcaption>
-          </figure>
-          <div class="portrait-note note-a">
-            <strong data-en="AI Infra" data-zh="机器学习基础架构">AI Infra</strong>
-            <span>STORAGE · PS · KV CACHE</span>
-          </div>
-          <div class="portrait-note note-b">
-            <strong>ICPC</strong>
-            <span data-en="ASIA REGIONAL · SILVER" data-zh="亚洲区域赛 · 银牌">ASIA REGIONAL · SILVER</span>
-          </div>
-        </div>
+<!-- ABOUT -->
+<section id="about" class="wrap">
+  <div class="about-grid">
+    <div class="reveal">
+      <div class="eyebrow" data-en="01 — About" data-zh="01 — 关于">01 — About</div>
+      <h2 class="title" data-en="About me" data-zh="关于我">About me</h2>
+      <div style="margin-top:34px">
+      <p data-en="I'm a Computer Science student at &lt;b&gt;Tianjin University&lt;/b&gt;, and I mostly work on infrastructure — the storage and systems that sit underneath machine learning." data-zh="天津大学计算机专业本科生，主要方向是基础架构，做机器学习底层的存储与系统。" class="block">
+        I'm a Computer Science student at <b>Tianjin University</b>, and I mostly work on infrastructure — the storage and systems that sit underneath machine learning.
+      </p>
+      <p data-en="Right now I'm at &lt;b&gt;ByteDance&lt;/b&gt;, working on the Parameter Server — the high-throughput, low-latency store behind the AML machine-learning platform. Before that, competitive programming (I'm an &lt;b&gt;ICPC silver medalist&lt;/b&gt;) gave me most of my data-structure and performance habits." data-zh="目前在&lt;b&gt;字节跳动&lt;/b&gt;做 Parameter Server，为 AML 机器学习平台提供高吞吐、低延迟的参数存储。更早时候打 ACM 竞赛（&lt;b&gt;ICPC 银牌&lt;/b&gt;），数据结构和性能优化的底子就是那时候练出来的。" class="block">
+        Right now I'm at <b>ByteDance</b>, working on the Parameter Server — the high-throughput, low-latency store behind the AML machine-learning platform. Before that, competitive programming (I'm an <b>ICPC silver medalist</b>) gave me most of my data-structure and performance habits.
+      </p>
+      <p data-en="I like working across the whole stack, from low-level code up to the models on top. One project on astronomical light-curve classification grew into a &lt;b&gt;first-author paper accepted by ApJS&lt;/b&gt;. Outside of systems, I'm into astronomy." data-zh="我习惯从底层代码到上层模型贯通整个技术栈来解决问题。正是在这样的实践中，一个天文光变曲线分类项目逐步深入，最终形成了一篇&lt;b&gt;ApJS 一作论文&lt;/b&gt;。除了系统方向，我对天文观测也有浓厚兴趣。" class="block">
+        I like working across the whole stack, from low-level code up to the models on top. One project on astronomical light-curve classification grew into a <b>first-author paper accepted by ApJS</b>. Outside of systems, I'm into astronomy.
+      </p>
       </div>
-    </section>
-
-    <section class="section-shell" id="profile" data-observe>
-      <div class="section-heading">
-        <div class="section-index">01</div>
-        <div>
-          <p class="eyebrow">PROFILE</p>
-          <h2 data-en="Systems below.&lt;br&gt;Models above." data-zh="向下做系统，&lt;br&gt;向上看模型。">Systems below.<br>Models above.</h2>
-        </div>
-        <p class="section-intro" data-en="I like problems where data structures, storage layout, concurrency, and model requirements meet in one hot path." data-zh="我喜欢处理数据结构、存储布局、并发与模型需求在同一条核心链路交汇的问题。">
-          I like problems where data structures, storage layout, concurrency, and model requirements meet in one hot path.
-        </p>
+    </div>
+    <div class="info-card reveal">
+      <h4 data-en="At a glance" data-zh="速览">At a glance</h4>
+      <div class="info-rows">
+      <div class="info-row"><span class="k" data-en="Focus" data-zh="方向">Focus</span><span class="v" data-en="ML Infra · Storage" data-zh="机器学习基础架构 · 存储">ML Infra · Storage</span></div>
+      <div class="info-row"><span class="k" data-en="Stack" data-zh="技术栈">Stack</span><span class="v">C++ · CUDA · Distributed Storage</span></div>
+      <div class="info-row"><span class="k" data-en="GitHub" data-zh="GitHub">GitHub</span><span class="v">bestdo77</span></div>
+      <div class="info-row"><span class="k" data-en="Education" data-zh="教育">Education</span><span class="v" data-en="CS · Tianjin University" data-zh="计算机 · 天津大学">CS · Tianjin University</span></div>
+      <div class="info-row"><span class="k" data-en="Location" data-zh="所在地">Location</span><span class="v" data-en="Tianjin, China" data-zh="中国 · 天津">Tianjin, China</span></div>
+      <div class="info-row"><span class="k" data-en="Interests" data-zh="兴趣">Interests</span><span class="v" data-en="Systems · Astronomy" data-zh="系统 · 天文">Systems · Astronomy</span></div>
       </div>
+    </div>
+  </div>
+</section>
 
-      <div class="profile-grid" data-reveal>
-        <article class="profile-copy">
-          <p data-en="I'm a Computer Science student at &lt;b&gt;Tianjin University&lt;/b&gt;, and I mostly work on infrastructure — the storage and systems that sit underneath machine learning." data-zh="天津大学计算机专业本科生，主要方向是基础架构，做机器学习底层的存储与系统。">
-            I'm a Computer Science student at <b>Tianjin University</b>, and I mostly work on infrastructure — the storage and systems that sit underneath machine learning.
-          </p>
-          <p data-en="Right now I'm at &lt;b&gt;ByteDance&lt;/b&gt;, working on the Parameter Server — the high-throughput, low-latency store behind the AML machine-learning platform. Competitive programming — including an &lt;b&gt;ICPC regional silver medal&lt;/b&gt; — shaped how I reason about data structures and performance." data-zh="目前在&lt;b&gt;字节跳动&lt;/b&gt;做 Parameter Server，为 AML 机器学习平台提供高吞吐、低延迟的参数存储。算法竞赛经历——包括 &lt;b&gt;ICPC 区域赛银牌&lt;/b&gt;——塑造了我处理数据结构与性能问题的方式。">
-            Right now I'm at <b>ByteDance</b>, working on the Parameter Server — the high-throughput, low-latency store behind the AML machine-learning platform. Competitive programming — including an <b>ICPC regional silver medal</b> — shaped how I reason about data structures and performance.
-          </p>
-          <p data-en="I work across the stack, from low-level code to the models on top. An astronomical light-curve classification project grew into a &lt;b&gt;first-author paper accepted by ApJS&lt;/b&gt;. Outside of systems, I'm into astronomy." data-zh="我习惯从底层代码到上层模型贯通整个技术栈来解决问题。一个天文光变曲线分类项目逐步深入，最终形成一篇&lt;b&gt;被 ApJS 接收的一作论文&lt;/b&gt;。系统之外，我也喜欢天文。">
-            I work across the stack, from low-level code to the models on top. An astronomical light-curve classification project grew into a <b>first-author paper accepted by ApJS</b>. Outside of systems, I'm into astronomy.
-          </p>
-          <blockquote class="profile-quote" data-en="“From low-level code to the models on top.”" data-zh="“从底层代码，到上层模型。”">“From low-level code to the models on top.”</blockquote>
-        </article>
+<!-- EXPERIENCE -->
+<section id="experience" class="wrap">
+  <div class="eyebrow reveal" data-en="02 — Experience & Education" data-zh="02 — 经历与教育">02 — Experience &amp; Education</div>
+  <h2 class="title reveal" data-en="My journey" data-zh="我的历程">My journey</h2>
+  <div class="timeline reveal" style="margin-top:34px">
+    <div class="titem">
+      <div class="when">2026.06 — <span data-en="Present" data-zh="至今">Present</span></div>
+      <h3 data-en="Infra Intern" data-zh="基础架构实习生">Infra Intern</h3>
+      <div class="org" data-en="ByteDance · Data Platform, AML-Engine" data-zh="字节跳动 · 数据平台 AML-Engine">ByteDance · Data Platform, AML-Engine</div>
+      <ul class="tim-list">
+        <li data-en="On the core infra team behind &lt;b&gt;Parameter Server &amp; KV-cache&lt;/b&gt; — the unified, stateful, high-availability parameter storage that powers AML, ByteDance's ML platform for recommendation, ads and search." data-zh="所在团队负责 &lt;b&gt;Parameter Server 与 KV-cache&lt;/b&gt; 的核心基础架构，为字节 AML 机器学习平台（推荐 / 广告 / 搜索）提供统一、有状态、高可用的参数存储底座。" class="block">On the core infra team behind <b>Parameter Server &amp; KV-cache</b> — the unified, stateful, high-availability parameter storage that powers AML, ByteDance's ML platform for recommendation, ads and search.</li>
+        <li data-en="&lt;b&gt;Core-path optimization:&lt;/b&gt; working on the Parameter Server hot path — the high-throughput, low-latency store for large-scale sparse features and large models across training and online serving." data-zh="&lt;b&gt;核心链路优化：&lt;/b&gt;负责 Parameter Server 核心链路，面向大规模稀疏特征和大模型，兼顾训练与在线推理场景下的高吞吐、低延迟。" class="block"><b>Core-path optimization:</b> working on the Parameter Server hot path — the high-throughput, low-latency store for large-scale sparse features and large models across training and online serving.</li>
+        <li data-en="&lt;b&gt;Eviction &amp; operability:&lt;/b&gt; building and tuning eviction strategy and day-to-day operability for a system that has to stay stable under real production load." data-zh="&lt;b&gt;淘汰与可运维性：&lt;/b&gt;负责淘汰策略与日常运维建设，保障系统在真实生产负载下长期稳定。" class="block"><b>Eviction &amp; operability:</b> building and tuning eviction strategy and day-to-day operability for a system that has to stay stable under real production load.</li>
+      </ul>
+    </div>
+    <div class="titem">
+      <div class="when">2026.03 — 2026.05</div>
+      <h3 data-en="Infra Intern" data-zh="基础架构实习生">Infra Intern</h3>
+      <div class="org" data-en="National Supercomputing Center in Tianjin" data-zh="国家超级计算天津中心">National Supercomputing Center in Tianjin</div>
+      <ul class="tim-list">
+        <li data-en="Worked on LLM inference infrastructure — multi-LoRA batch scheduling on heterogeneous accelerators, enabling concurrent adapters in offline serving." data-zh="参与大模型推理基础设施——在异构算力上实现多 LoRA 批任务调度，支持离线场景下多 adapter 并发推理。" class="block">Worked on LLM inference infrastructure — multi-LoRA batch scheduling on heterogeneous accelerators, enabling concurrent adapters in offline serving.</li>
+        <li data-en="Tuned the vLLM serving path to overlap compute and transfer, cutting adapter-switch latency and GPU memory fragmentation." data-zh="优化 vLLM 推理链路，让计算与传输流水线重叠，降低 adapter 切换延迟与显存碎片。" class="block">Tuned the vLLM serving path to overlap compute and transfer, cutting adapter-switch latency and GPU memory fragmentation.</li>
+      </ul>
+    </div>
+    <div class="titem">
+      <div class="when">2023.09 — <span data-en="Present" data-zh="至今">Present</span></div>
+      <h3 data-en="B.Eng. in Computer Science" data-zh="计算机科学与技术 本科">B.Eng. in Computer Science</h3>
+      <div class="org" data-en="Tianjin University (985/211)" data-zh="天津大学（985/211）">Tianjin University (985/211)</div>
+      <ul class="tim-list">
+        <li data-en="Foundations in systems, parallel &amp; heterogeneous computing, and algorithms — the base for the performance work I do today." data-zh="打下系统、并行与异构计算、算法的底子——支撑我如今做性能优化工作的基础。" class="block">Foundations in systems, parallel &amp; heterogeneous computing, and algorithms — the base for the performance work I do today.</li>
+      </ul>
+    </div>
+  </div>
+</section>
 
-        <aside class="fact-panel" aria-label="Profile facts">
-          <header><span data-en="AT A GLANCE" data-zh="个人速览">AT A GLANCE</span><span>2026</span></header>
-          <dl class="fact-list">
-            <div><dt data-en="FOCUS" data-zh="方向">FOCUS</dt><dd data-en="ML Infra · Storage" data-zh="机器学习基础架构 · 存储">ML Infra · Storage</dd></div>
-            <div><dt data-en="STACK" data-zh="技术栈">STACK</dt><dd>C++ · CUDA · Distributed Storage</dd></div>
-            <div><dt>GITHUB</dt><dd>bestdo77</dd></div>
-            <div><dt data-en="EDUCATION" data-zh="教育">EDUCATION</dt><dd data-en="CS · Tianjin University" data-zh="计算机 · 天津大学">CS · Tianjin University</dd></div>
-            <div><dt data-en="LOCATION" data-zh="所在地">LOCATION</dt><dd data-en="Tianjin, China" data-zh="中国 · 天津">Tianjin, China</dd></div>
-            <div><dt data-en="INTERESTS" data-zh="兴趣">INTERESTS</dt><dd data-en="Systems · Astronomy" data-zh="系统 · 天文">Systems · Astronomy</dd></div>
-          </dl>
-        </aside>
-      </div>
+<!-- PROJECTS -->
+<section id="projects" class="wrap">
+  <div class="eyebrow reveal" data-en="03 — Projects" data-zh="03 — 项目">03 — Projects</div>
+  <h2 class="title reveal" data-en="Selected projects" data-zh="精选项目">Selected projects</h2>
 
-      <div class="tool-strip" aria-label="Technical toolbox" data-reveal>
-        <span>C++ · CONCURRENCY</span>
-        <span>CUDA · INFERENCE</span>
-        <span>DISTRIBUTED STORAGE</span>
-        <span>PYTHON · ONNX</span>
-      </div>
-    </section>
+  <div class="proj reveal" style="margin-top:34px">
+    <div class="glow"></div>
+    <div class="proj-head">
+      <h3 data-en="Parallel Model Eviction for a Large-scale Parameter Server" data-zh="大规模参数服务器的并行模型淘汰">Parallel Model Eviction for a Large-scale Parameter Server</h3>
+      <span class="badge" data-en="ByteDance · Infra" data-zh="字节跳动 · 基础架构">ByteDance · Infra</span>
+    </div>
+    <div class="meta">2026 · C++ · Parameter Server · AOF + SSD tiered storage</div>
+    <ul class="proj-list">
+      <li data-en="&lt;b&gt;Ordered concurrency:&lt;/b&gt; introduced per-region coordinators that keep the append-only log and the SSD write path strictly ordered while eviction runs across many threads." data-zh="&lt;b&gt;有序并发：&lt;/b&gt;引入分区级协调器，在多线程淘汰过程中严格保证 AOF 追加日志与 SSD 写入路径的有序性。" class="block"><b>Ordered concurrency:</b> introduced per-region coordinators that keep the append-only log and the SSD write path strictly ordered while eviction runs across many threads.</li>
+      <li data-en="&lt;b&gt;~35% faster:&lt;/b&gt; parallelized the eviction hot path (single-thread falls back to the original code path as a safety net) — end-to-end eviction on a large production model sped up roughly 35% with near-flat memory and virtually no extra disk I/O." data-zh="&lt;b&gt;提速约 35%：&lt;/b&gt;并行化淘汰核心链路（单线程自动回退到原始分支作为兜底）——大规模生产模型的端到端淘汰整体提速约 35%，内存几乎不变、磁盘读写总量基本无增加。" class="block"><b>~35% faster:</b> parallelized the eviction hot path (single-thread falls back to the original code path as a safety net) — end-to-end eviction on a large production model sped up roughly 35% with near-flat memory and virtually no extra disk I/O.</li>
+      <li data-en="&lt;b&gt;Correctness first:&lt;/b&gt; verified by bit-exact, per-FID comparison of dump files across single-threaded, multi-threaded and concurrent-model runs — zero mismatches against the original path." data-zh="&lt;b&gt;正确性优先：&lt;/b&gt;对 dump 文件做逐 FID、逐 bit 比对——覆盖单线程、多线程与多模型并发场景，与原始链路结果零差异。" class="block"><b>Correctness first:</b> verified by bit-exact, per-FID comparison of dump files across single-threaded, multi-threaded and concurrent-model runs — zero mismatches against the original path.</li>
+    </ul>
+    <div class="metric-row">
+      <div class="metric"><span class="m">~35%</span><span class="d" data-en="faster eviction" data-zh="淘汰提速">faster eviction</span></div>
+      <div class="metric"><span class="m">1%</span><span class="d" data-en="extra memory" data-zh="额外内存">extra memory</span></div>
+      <div class="metric"><span class="m">~0%</span><span class="d" data-en="extra disk I/O" data-zh="额外磁盘 IO">extra disk I/O</span></div>
+      <div class="metric"><span class="m">0</span><span class="d" data-en="FID mismatches" data-zh="FID 差异">FID mismatches</span></div>
+    </div>
+  </div>
 
-    <section class="section-shell" id="experience" data-observe>
-      <div class="section-heading">
-        <div class="section-index">02</div>
-        <div>
-          <p class="eyebrow">EXPERIENCE / EDUCATION</p>
-          <h2 data-en="A path toward&lt;br&gt;the hot path." data-zh="一路走向&lt;br&gt;核心链路。">A path toward<br>the hot path.</h2>
-        </div>
-        <p class="section-intro" data-en="Algorithms built the reflexes; HPC widened the machine view; production infrastructure made correctness and operability non-negotiable." data-zh="算法竞赛训练基本功，超算拓展机器视角，生产基础架构则让正确性与可运维性成为硬约束。">
-          Algorithms built the reflexes; HPC widened the machine view; production infrastructure made correctness and operability non-negotiable.
-        </p>
-      </div>
+  <div class="proj reveal">
+    <div class="glow"></div>
+    <div class="proj-head">
+      <h3 data-en="Incremental Management & Real-time Classification of Large-scale Astronomical Light Curves" data-zh="大规模天文光变曲线增量管理与实时分类">Incremental Management &amp; Real-time Classification of Large-scale Astronomical Light Curves</h3>
+      <span class="badge" data-en="Lead · Accepted by ApJS" data-zh="负责人 · 已被 ApJS 接收">Lead · Accepted by ApJS</span>
+    </div>
+    <div class="meta">2025.03 — 2026.06 · TDengine · LightGBM · ONNX · C++ · Python</div>
+    <ul class="proj-list">
+      <li data-en="&lt;b&gt;High-performance storage:&lt;/b&gt; designed a one-table-per-source model with HEALPix spatial indexing on TDengine — 48M rows ingested in 33s, millisecond cone searches (full scan 15s → 50ms)." data-zh="&lt;b&gt;高性能存储：&lt;/b&gt;基于时序数据库 TDengine 设计 one-table-per-source 数据模型与 HEALPix 空间索引，实现 4800 万行 / 33s 批量导入与毫秒级锥形检索（全表扫描 15s → 50ms）。" class="block"><b>High-performance storage:</b> designed a one-table-per-source model with HEALPix spatial indexing on TDengine — 48M rows ingested in 33s, millisecond cone searches (full scan 15s → 50ms).</li>
+      <li data-en="&lt;b&gt;Lightweight inference:&lt;/b&gt; replaced a 21.8GB random forest with LightGBM exported to ONNX — 87× smaller (252MB), memory from 22GB to &lt;10MB, 93.6% accuracy with no GPU." data-zh="&lt;b&gt;轻量化推理：&lt;/b&gt;用 LightGBM 替换原 21.8GB 随机森林模型并导出 ONNX，体积压缩 87×（252MB），内存从 22GB 降至 &lt;10MB，无 GPU 即达 93.6% 准确率。" class="block"><b>Lightweight inference:</b> replaced a 21.8GB random forest with LightGBM exported to ONNX — 87× smaller (252MB), memory from 22GB to &lt;10MB, 93.6% accuracy with no GPU.</li>
+      <li data-en="&lt;b&gt;Incremental triggering:&lt;/b&gt; confidence filtering re-classifies sources as new data arrives; high-confidence results emit at 50% curve completeness to trigger follow-up." data-zh="&lt;b&gt;增量触发：&lt;/b&gt;设计置信度过滤与增量触发机制，新数据写入时自动重分类，光变曲线积累 50% 即可输出高置信结果并触发 follow-up。" class="block"><b>Incremental triggering:</b> confidence filtering re-classifies sources as new data arrives; high-confidence results emit at 50% curve completeness to trigger follow-up.</li>
+    </ul>
+    <div class="metric-row">
+      <div class="metric"><span class="m">48M/33s</span><span class="d" data-en="ingest rate" data-zh="导入速度">ingest rate</span></div>
+      <div class="metric"><span class="m">87×</span><span class="d" data-en="model shrink" data-zh="模型压缩">model shrink</span></div>
+      <div class="metric"><span class="m">93.6%</span><span class="d" data-en="accuracy" data-zh="准确率">accuracy</span></div>
+    </div>
+  </div>
+</section>
 
-      <div class="timeline" data-reveal>
-        <article class="timeline-item">
-          <div class="timeline-time">2026.06 — <span data-en="PRESENT" data-zh="至今">PRESENT</span></div>
-          <div class="timeline-role">
-            <h3 data-en="Infra Intern" data-zh="基础架构实习生">Infra Intern</h3>
-            <p data-en="ByteDance · Data Platform, AML-Engine" data-zh="字节跳动 · 数据平台 AML-Engine">ByteDance · Data Platform, AML-Engine</p>
-          </div>
-          <div class="timeline-detail">
-            <ul>
-              <li data-en="On the core infrastructure behind &lt;b&gt;Parameter Server and KV-cache&lt;/b&gt; for recommendation, ads, and search." data-zh="参与推荐、广告与搜索场景背后的 &lt;b&gt;Parameter Server 与 KV-cache&lt;/b&gt; 核心基础架构。">On the core infrastructure behind <b>Parameter Server and KV-cache</b> for recommendation, ads, and search.</li>
-              <li data-en="Optimize the high-throughput, low-latency hot path for large-scale sparse features and large models across training and online serving." data-zh="优化大规模稀疏特征和大模型在训练与在线推理中的高吞吐、低延迟核心链路。">Optimize the high-throughput, low-latency hot path for large-scale sparse features and large models across training and online serving.</li>
-              <li data-en="Build eviction strategy and operability for stable behavior under real production load." data-zh="建设淘汰策略与可运维能力，保障系统在真实生产负载下长期稳定。">Build eviction strategy and operability for stable behavior under real production load.</li>
-            </ul>
-          </div>
-        </article>
+<!-- HONORS -->
+<section id="honors" class="wrap">
+  <div class="eyebrow reveal" data-en="04 — Honors" data-zh="04 — 荣誉">04 — Honors</div>
+  <h2 class="title reveal" data-en="Awards & recognition" data-zh="获奖与荣誉">Awards &amp; recognition</h2>
+  <div class="honors reveal" style="margin-top:34px">
+    <div class="honor">
+      <div class="medal">🥈</div>
+      <div class="txt"><h4 data-en="ICPC Asia Regional — Silver" data-zh="ICPC 亚洲区域赛 — 银牌">ICPC Asia Regional — Silver</h4><p data-en="49th ICPC · Hangzhou · 2024" data-zh="第 49 届 ICPC · 杭州站 · 2024">49th ICPC · Hangzhou · 2024</p></div>
+    </div>
+    <div class="honor">
+      <div class="medal">🥉</div>
+      <div class="txt"><h4 data-en="ICPC Asia Regional — Bronze" data-zh="ICPC 亚洲区域赛 — 铜牌">ICPC Asia Regional — Bronze</h4><p data-en="49th ICPC · Chengdu · 2024" data-zh="第 49 届 ICPC · 成都站 · 2024">49th ICPC · Chengdu · 2024</p></div>
+    </div>
+    <div class="honor">
+      <div class="medal">🥈</div>
+      <div class="txt"><h4 data-en="ASC Student Supercomputer Challenge" data-zh="ASC 世界大学生超算竞赛">ASC Student Supercomputer Challenge</h4><p data-en="Second Prize · 2025 & 2026" data-zh="二等奖 · 2025 & 2026">Second Prize · 2025 &amp; 2026</p></div>
+    </div>
+  </div>
+</section>
 
-        <article class="timeline-item">
-          <div class="timeline-time">2026.03 — 2026.05</div>
-          <div class="timeline-role">
-            <h3 data-en="Infra Intern" data-zh="基础架构实习生">Infra Intern</h3>
-            <p data-en="National Supercomputing Center in Tianjin" data-zh="国家超级计算天津中心">National Supercomputing Center in Tianjin</p>
-          </div>
-          <div class="timeline-detail">
-            <ul>
-              <li data-en="Worked on LLM inference infrastructure: multi-LoRA batch scheduling on heterogeneous accelerators for concurrent offline adapters." data-zh="参与大模型推理基础设施：在异构算力上实现多 LoRA 批任务调度，支持离线场景多 adapter 并发推理。">Worked on LLM inference infrastructure: multi-LoRA batch scheduling on heterogeneous accelerators for concurrent offline adapters.</li>
-              <li data-en="Tuned the vLLM serving path to overlap compute and transfer, reducing adapter-switch latency and GPU memory fragmentation." data-zh="优化 vLLM 推理链路，让计算与传输流水线重叠，降低 adapter 切换延迟与显存碎片。">Tuned the vLLM serving path to overlap compute and transfer, reducing adapter-switch latency and GPU memory fragmentation.</li>
-            </ul>
-          </div>
-        </article>
+<!-- RESEARCH -->
+<section id="research" class="wrap">
+  <div class="eyebrow reveal" data-en="05 — Research" data-zh="05 — 研究">05 — Research</div>
+  <h2 class="title reveal" data-en="Publication" data-zh="学术论文">Publication</h2>
+  <div class="paper reveal" style="margin-top:34px">
+    <div class="venue">✦ <span data-en="First author · Accepted by ApJS" data-zh="第一作者 · 已被 ApJS 接收">First author · Accepted by ApJS</span></div>
+    <h3>TDLight: A Framework for Incremental Light-Curve Management and Continuous Classification Optimization</h3>
+    <p class="authorline" data-en="&lt;b&gt;Xinghang Yu&lt;/b&gt; (first author), Ce Yu, et al. · The Astrophysical Journal Supplement Series (ApJS), accepted" data-zh="&lt;b&gt;于兴航&lt;/b&gt;（第一作者）、于策 等 · 《天体物理学报增刊》(ApJS)，已接收" class="block"><b>Xinghang Yu</b> (first author), Ce Yu, et al. · The Astrophysical Journal Supplement Series (ApJS), accepted</p>
+    <div class="cta">
+      <a class="btn primary" href="assets/TDLight-paper.pdf" target="_blank"><span data-en="Read Paper" data-zh="阅读论文">Read Paper</span> →</a>
+    </div>
+  </div>
+</section>
 
-        <article class="timeline-item">
-          <div class="timeline-time">2023.09 — <span data-en="PRESENT" data-zh="至今">PRESENT</span></div>
-          <div class="timeline-role">
-            <h3 data-en="B.Eng. in Computer Science" data-zh="计算机科学与技术 本科">B.Eng. in Computer Science</h3>
-            <p data-en="Tianjin University (985/211)" data-zh="天津大学（985/211）">Tianjin University (985/211)</p>
-          </div>
-          <div class="timeline-detail">
-            <ul>
-              <li data-en="Foundations in systems, parallel and heterogeneous computing, and algorithms — the base for the performance work I do today." data-zh="系统、并行与异构计算、算法方向的学习，构成如今性能优化工作的基础。">Foundations in systems, parallel and heterogeneous computing, and algorithms — the base for the performance work I do today.</li>
-            </ul>
-          </div>
-        </article>
-      </div>
-    </section>
+<!-- CONTACT -->
+<section id="contact" class="wrap contact">
+  <div class="contact-grid">
+    <div class="contact-intro reveal">
+      <div class="eyebrow" data-en="06 — Contact" data-zh="06 — 联系">06 — Contact</div>
+      <h2 class="title" data-en="Say hi" data-zh="打个招呼">Say hi</h2>
+      <p class="lead" data-en="Always happy to chat about systems, storage, or astronomy. Email is the fastest way to reach me." data-zh="欢迎和我聊聊系统、存储或天文，发邮件找我最快。">Always happy to chat about systems, storage, or astronomy. Email is the fastest way to reach me.</p>
+    </div>
+    <div class="contact-cards reveal">
+      <a class="ccard" href="mailto:3023244355@tju.edu.cn">
+        <div class="ico">✉</div><div class="txt"><div class="lbl">Email</div><div class="val">3023244355@tju.edu.cn</div></div>
+      </a>
+      <a class="ccard" href="https://github.com/bestdo77" target="_blank">
+        <div class="ico">◐</div><div class="txt"><div class="lbl">GitHub</div><div class="val">github.com/bestdo77</div></div>
+      </a>
+    </div>
+  </div>
+</section>
 
-    <section class="section-shell work-section" id="work" data-observe>
-      <div class="section-heading">
-        <div class="section-index">03</div>
-        <div>
-          <p class="eyebrow">SELECTED SYSTEMS WORK</p>
-          <h2 data-en="Make it faster.&lt;br&gt;Keep it exact." data-zh="让它更快，&lt;br&gt;也必须完全正确。">Make it faster.<br>Keep it exact.</h2>
-        </div>
-        <p class="section-intro" data-en="Two projects, one recurring pattern: change the architecture around the bottleneck, then prove the result with measurable system evidence." data-zh="两个项目，一条共同主线：围绕瓶颈改变架构，再用可度量的系统证据证明结果。">
-          Two projects, one recurring pattern: change the architecture around the bottleneck, then prove the result with measurable system evidence.
-        </p>
-      </div>
+<footer>
+  <p>© 2026 Xinghang Yu · 于兴航</p>
+</footer>
 
-      <article class="project-case" data-reveal>
-        <header class="project-head">
-          <div class="project-number">03.1</div>
-          <div>
-            <h3 data-en="Parallel Model Eviction for a Large-scale Parameter Server" data-zh="大规模参数服务器的并行模型淘汰">Parallel Model Eviction for a Large-scale Parameter Server</h3>
-            <p>2026 · C++ · PARAMETER SERVER · AOF + SSD TIERED STORAGE</p>
-          </div>
-          <span class="project-badge" data-en="BYTEDANCE · INFRA" data-zh="字节跳动 · 基础架构">BYTEDANCE · INFRA</span>
-        </header>
-        <div class="project-body">
-          <div class="project-story">
-            <ul>
-              <li data-en="&lt;b&gt;Ordered concurrency:&lt;/b&gt; introduced per-region coordinators that keep the append-only log and SSD write path strictly ordered while eviction runs across many threads." data-zh="&lt;b&gt;有序并发：&lt;/b&gt;引入分区级协调器，在多线程淘汰过程中严格保证 AOF 追加日志与 SSD 写入路径有序。"><b>Ordered concurrency:</b> introduced per-region coordinators that keep the append-only log and SSD write path strictly ordered while eviction runs across many threads.</li>
-              <li data-en="&lt;b&gt;~35% faster:&lt;/b&gt; parallelized the eviction hot path while keeping the single-thread path as a safety fallback, with near-flat memory and virtually no extra disk I/O." data-zh="&lt;b&gt;提速约 35%：&lt;/b&gt;并行化淘汰核心链路，同时保留单线程原始路径作为安全兜底；内存几乎不变，磁盘 IO 基本无增加。"><b>~35% faster:</b> parallelized the eviction hot path while keeping the single-thread path as a safety fallback, with near-flat memory and virtually no extra disk I/O.</li>
-              <li data-en="&lt;b&gt;Correctness first:&lt;/b&gt; verified dump files by bit-exact, per-FID comparison across single-threaded, multi-threaded, and concurrent-model runs — zero mismatches." data-zh="&lt;b&gt;正确性优先：&lt;/b&gt;覆盖单线程、多线程与多模型并发，对 dump 文件逐 FID、逐 bit 比对，结果零差异。"><b>Correctness first:</b> verified dump files by bit-exact, per-FID comparison across single-threaded, multi-threaded, and concurrent-model runs — zero mismatches.</li>
-            </ul>
-          </div>
-          <div class="project-visual" aria-label="Parallel eviction architecture">
-            <span class="visual-kicker">ORDERED PARALLEL EVICTION · CONCEPTUAL FLOW</span>
-            <div class="system-flow">
-              <div class="flow-node"><strong data-en="Expired FIDs" data-zh="过期 FID">Expired FIDs</strong><span>MODEL · SLOT · REGION</span></div>
-              <i class="flow-arrow">→</i>
-              <div class="flow-node blue"><strong data-en="Region workers" data-zh="分区工作线程">Region workers</strong><span>PARALLEL EXECUTION</span></div>
-              <i class="flow-arrow">→</i>
-              <div class="flow-node acid"><strong data-en="Coordinator" data-zh="顺序协调器">Coordinator</strong><span>SEQUENCE · COMMIT ORDER</span></div>
-              <i class="flow-arrow">→</i>
-              <div class="flow-node coral"><strong>AOF + SSD</strong><span>BIT-EXACT OUTPUT</span></div>
-            </div>
-            <p class="flow-note" data-en="Parallel across independent regions; ordered at the append and persistence boundary." data-zh="独立 region 之间并行，在日志追加与持久化边界保持严格有序。">Parallel across independent regions; ordered at the append and persistence boundary.</p>
-          </div>
-        </div>
-        <div class="metric-grid">
-          <div><strong>~35%</strong><span data-en="FASTER EVICTION" data-zh="淘汰提速">FASTER EVICTION</span></div>
-          <div><strong>1%</strong><span data-en="EXTRA MEMORY" data-zh="额外内存">EXTRA MEMORY</span></div>
-          <div><strong>~0%</strong><span data-en="EXTRA DISK I/O" data-zh="额外磁盘 IO">EXTRA DISK I/O</span></div>
-          <div><strong>0</strong><span data-en="FID MISMATCHES" data-zh="FID 差异">FID MISMATCHES</span></div>
-        </div>
-      </article>
+<script>
+/* ---------- language toggle ---------- */
+/* Every bilingual element carries both data-en and data-zh (values may contain HTML). */
+function applyLang(){
+  const zh = document.body.classList.contains('zh');
+  document.querySelectorAll('[data-en]').forEach(el=>{
+    const txt = zh ? (el.getAttribute('data-zh') || el.getAttribute('data-en')) : el.getAttribute('data-en');
+    el.innerHTML = txt;
+  });
+  document.getElementById('langbtn').textContent = zh ? 'EN' : '中文';
+  document.documentElement.lang = zh ? 'zh' : 'en';
+}
+function toggleLang(){
+  document.body.classList.toggle('zh');
+  const zh = document.body.classList.contains('zh');
+  try{ localStorage.setItem('lang', zh?'zh':'en'); }catch(e){}
+  applyLang();
+}
+try{ if(localStorage.getItem('lang')==='zh'){ document.body.classList.add('zh'); } }catch(e){}
+applyLang();
 
-      <article class="project-case" data-reveal>
-        <header class="project-head">
-          <div class="project-number">03.2</div>
-          <div>
-            <h3 data-en="Incremental Management &amp; Real-time Classification of Astronomical Light Curves" data-zh="大规模天文光变曲线增量管理与实时分类">Incremental Management &amp; Real-time Classification of Astronomical Light Curves</h3>
-            <p>2025.03 — 2026.06 · TDENGINE · LIGHTGBM · ONNX · C++ · PYTHON</p>
-          </div>
-          <span class="project-badge" data-en="LEAD · ApJS" data-zh="负责人 · ApJS">LEAD · ApJS</span>
-        </header>
-        <div class="project-body">
-          <div class="project-story">
-            <ul>
-              <li data-en="&lt;b&gt;High-performance storage:&lt;/b&gt; designed a one-table-per-source model with HEALPix indexing on TDengine — 48M rows ingested in 33 seconds; cone search improved from a 15-second full scan to 50 ms." data-zh="&lt;b&gt;高性能存储：&lt;/b&gt;在 TDengine 上设计 one-table-per-source 数据模型与 HEALPix 索引，4800 万行 33 秒导入，锥形检索从全表扫描 15 秒降至 50 ms。"><b>High-performance storage:</b> designed a one-table-per-source model with HEALPix indexing on TDengine — 48M rows ingested in 33 seconds; cone search improved from a 15-second full scan to 50 ms.</li>
-              <li data-en="&lt;b&gt;Lightweight inference:&lt;/b&gt; replaced a 21.8 GB random forest with LightGBM exported to ONNX — 87× smaller, memory below 10 MB, and 93.6% accuracy without a GPU." data-zh="&lt;b&gt;轻量化推理：&lt;/b&gt;用 LightGBM 替换 21.8 GB 随机森林并导出 ONNX，体积缩小 87 倍，内存低于 10 MB，无 GPU 达到 93.6% 准确率。"><b>Lightweight inference:</b> replaced a 21.8 GB random forest with LightGBM exported to ONNX — 87× smaller, memory below 10 MB, and 93.6% accuracy without a GPU.</li>
-              <li data-en="&lt;b&gt;Incremental triggering:&lt;/b&gt; confidence filtering re-classifies sources as new data arrives; high-confidence results can emit at 50% curve completeness." data-zh="&lt;b&gt;增量触发：&lt;/b&gt;新数据到达时自动重分类，通过置信度过滤让光变曲线在积累到 50% 时即可输出高置信结果。"><b>Incremental triggering:</b> confidence filtering re-classifies sources as new data arrives; high-confidence results can emit at 50% curve completeness.</li>
-            </ul>
-          </div>
-          <div class="project-visual" aria-label="TDLight architecture">
-            <span class="visual-kicker">TDLIGHT · DATA TO CONTINUOUS CLASSIFICATION</span>
-            <div class="system-flow">
-              <div class="flow-node"><strong data-en="Light curves" data-zh="光变曲线">Light curves</strong><span>INCREMENTAL EVENTS</span></div>
-              <i class="flow-arrow">→</i>
-              <div class="flow-node blue"><strong>TDengine</strong><span>ONE TABLE / SOURCE</span></div>
-              <i class="flow-arrow">→</i>
-              <div class="flow-node acid"><strong>HEALPix</strong><span>SPATIAL INDEX + FEATURES</span></div>
-              <i class="flow-arrow">→</i>
-              <div class="flow-node coral"><strong>LightGBM · ONNX</strong><span>CONTINUOUS CLASSIFICATION</span></div>
-            </div>
-            <p class="flow-note" data-en="The system treats storage layout, spatial retrieval, and inference footprint as one end-to-end latency problem." data-zh="把存储布局、空间检索与推理开销视为同一个端到端延迟问题。">The system treats storage layout, spatial retrieval, and inference footprint as one end-to-end latency problem.</p>
-          </div>
-        </div>
-        <div class="metric-grid three">
-          <div><strong>48M/33s</strong><span data-en="INGEST RATE" data-zh="导入速度">INGEST RATE</span></div>
-          <div><strong>87×</strong><span data-en="MODEL SHRINK" data-zh="模型压缩">MODEL SHRINK</span></div>
-          <div><strong>93.6%</strong><span data-en="ACCURACY" data-zh="准确率">ACCURACY</span></div>
-        </div>
-      </article>
-    </section>
+/* ---------- nav scroll state + mobile menu ---------- */
+const nav=document.getElementById('nav');
+addEventListener('scroll',()=>{ nav.classList.toggle('scrolled', scrollY>40); });
+const links=document.getElementById('navlinks'), tog=document.getElementById('navtoggle');
+tog.addEventListener('click',()=>links.classList.toggle('open'));
+links.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>links.classList.remove('open')));
 
-    <section class="section-shell" id="honors" data-observe>
-      <div class="section-heading">
-        <div class="section-index">04</div>
-        <div>
-          <p class="eyebrow">HONORS</p>
-          <h2 data-en="Competition&lt;br&gt;under pressure." data-zh="在压力中&lt;br&gt;竞争与协作。">Competition<br>under pressure.</h2>
-        </div>
-        <p class="section-intro" data-en="Algorithmic contests and supercomputing challenges trained two complementary instincts: find the invariant, then make the whole machine move." data-zh="算法竞赛与超算竞赛训练了两种互补能力：先找到不变量，再让整台机器协同运转。">
-          Algorithmic contests and supercomputing challenges trained two complementary instincts: find the invariant, then make the whole machine move.
-        </p>
-      </div>
+/* ---------- reveal on scroll ---------- */
+const io=new IntersectionObserver((es)=>{es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } })},{threshold:0.01, rootMargin:"0px 0px -8% 0px"});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+/* fallback: if anything hasn't revealed shortly after load (tall elements, no IO support), force it visible */
+addEventListener('load',()=>{ setTimeout(()=>{ document.querySelectorAll('.reveal:not(.in)').forEach(el=>{ const r=el.getBoundingClientRect(); if(r.top < innerHeight) el.classList.add('in'); }); },400); });
 
-      <div class="honor-grid" data-reveal>
-        <article class="honor-card">
-          <span class="honor-medal">🥈</span>
-          <span>ICPC · 2024</span>
-          <h3 data-en="Asia Regional · Silver" data-zh="亚洲区域赛 · 银牌">Asia Regional · Silver</h3>
-          <p data-en="49th ICPC · Hangzhou" data-zh="第 49 届 ICPC · 杭州站">49th ICPC · Hangzhou</p>
-        </article>
-        <article class="honor-card">
-          <span class="honor-medal">🥉</span>
-          <span>ICPC · 2024</span>
-          <h3 data-en="Asia Regional · Bronze" data-zh="亚洲区域赛 · 铜牌">Asia Regional · Bronze</h3>
-          <p data-en="49th ICPC · Chengdu" data-zh="第 49 届 ICPC · 成都站">49th ICPC · Chengdu</p>
-        </article>
-        <article class="honor-card">
-          <span class="honor-medal">🥈</span>
-          <span>ASC · 2025 / 2026</span>
-          <h3 data-en="Student Supercomputer Challenge" data-zh="世界大学生超算竞赛">Student Supercomputer Challenge</h3>
-          <p data-en="Second Prize · two consecutive years" data-zh="二等奖 · 连续两年">Second Prize · two consecutive years</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="section-shell dark-section" id="research" data-observe>
-      <div class="section-heading">
-        <div class="section-index">05</div>
-        <div>
-          <p class="eyebrow">RESEARCH</p>
-          <h2 data-en="A system that became&lt;br&gt;a paper." data-zh="从一个系统，&lt;br&gt;到一篇论文。">A system that became<br>a paper.</h2>
-        </div>
-        <p class="section-intro" data-en="TDLight connects incremental storage, spatial indexing, and lightweight inference into one continuous classification framework." data-zh="TDLight 将增量存储、空间索引和轻量推理连接成一个持续分类框架。">
-          TDLight connects incremental storage, spatial indexing, and lightweight inference into one continuous classification framework.
-        </p>
-      </div>
-
-      <article class="paper-feature" data-reveal>
-        <div class="paper-mark"><strong>TD</strong></div>
-        <div class="paper-copy">
-          <div class="paper-venue" data-en="FIRST AUTHOR · ACCEPTED BY ApJS" data-zh="第一作者 · 已被 ApJS 接收">FIRST AUTHOR · ACCEPTED BY ApJS</div>
-          <h3>TDLight: A Framework for Incremental Light-Curve Management and Continuous Classification Optimization</h3>
-          <div class="paper-authors" data-en="&lt;b&gt;Xinghang Yu&lt;/b&gt; (first author), Ce Yu, et al. · The Astrophysical Journal Supplement Series" data-zh="&lt;b&gt;于兴航&lt;/b&gt;（第一作者）、于策 等 · 《天体物理学报增刊》">
-            <b>Xinghang Yu</b> (first author), Ce Yu, et al. · The Astrophysical Journal Supplement Series
-          </div>
-          <p data-en="A framework for incremental light-curve management and continuous classification optimization, developed from the end-to-end astronomical data system described above." data-zh="围绕增量光变曲线管理与持续分类优化构建的框架，由上面的端到端天文数据系统进一步发展而来。">
-            A framework for incremental light-curve management and continuous classification optimization, developed from the end-to-end astronomical data system described above.
-          </p>
-          <a class="primary-button" href="./assets/TDLight-paper.pdf" target="_blank"><span data-en="Read the paper" data-zh="阅读论文">Read the paper</span><b>↗</b></a>
-        </div>
-      </article>
-    </section>
-
-    <section class="section-shell dark-section contact-section" id="contact" data-observe>
-      <div class="contact-grid">
-        <div class="contact-copy" data-reveal>
-          <p class="eyebrow"><span>06 · CONTACT</span></p>
-          <h2 data-en="Systems, storage,&lt;br&gt;or astronomy?" data-zh="聊聊系统、存储，&lt;br&gt;或者天文？">Systems, storage,<br>or astronomy?</h2>
-          <p data-en="Always happy to talk about infrastructure, performance, or scientific computing. Email is the fastest way to reach me." data-zh="欢迎交流基础架构、性能优化或科学计算。通过邮件联系我最快。">
-            Always happy to talk about infrastructure, performance, or scientific computing. Email is the fastest way to reach me.
-          </p>
-        </div>
-        <div class="contact-links" data-reveal>
-          <a class="contact-link" href="mailto:3023244355@tju.edu.cn">
-            <span>EMAIL</span><strong>3023244355@tju.edu.cn</strong><b>↗</b>
-          </a>
-          <a class="contact-link" href="https://github.com/bestdo77" target="_blank" rel="noreferrer">
-            <span>GITHUB</span><strong>github.com/bestdo77</strong><b>↗</b>
-          </a>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <span>© 2026 XINGHANG YU · 于兴航</span>
-    <a href="#top" data-en="BACK TO TOP ↑" data-zh="回到顶部 ↑">BACK TO TOP ↑</a>
-  </footer>
+/* ---------- floating dust motes (subtle, light theme) ---------- */
+const cv=document.getElementById('stars'), ctx=cv.getContext('2d');
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+let stars=[], W,H, DPR=Math.min(devicePixelRatio||1,2);
+function resize(){ W=cv.width=innerWidth*DPR; H=cv.height=innerHeight*DPR; cv.style.width=innerWidth+'px'; cv.style.height=innerHeight+'px';
+  const n=Math.floor((innerWidth*innerHeight)/20000);
+  stars=Array.from({length:n},()=>({ x:Math.random()*W, y:Math.random()*H, z:Math.random()*.9+.1, r:(Math.random()*1.4+.4)*DPR, t:Math.random()*Math.PI*2, sp:Math.random()*.006+.002 }));
+}
+resize(); addEventListener('resize',resize);
+let sy=0; addEventListener('scroll',()=>sy=scrollY);
+function paint(anim){
+  ctx.clearRect(0,0,W,H);
+  for(const s of stars){
+    if(anim) s.t+=s.sp;
+    const tw=.5+Math.sin(s.t)*.5;
+    const py=(s.y - sy*DPR*s.z*.2); const yy=((py%H)+H)%H;
+    ctx.beginPath();
+    ctx.arc(s.x, yy, s.r*(.7+tw*.4), 0, Math.PI*2);
+    /* faint brand-tinted motes on the light background */
+    const hue = s.z>.8? '249,115,22' : s.z>.62? '14,116,144' : '110,120,150';
+    ctx.fillStyle='rgba('+hue+','+(0.05+tw*0.12*s.z)+')';
+    ctx.fill();
+  }
+}
+function loop(){ paint(true); requestAnimationFrame(loop); }
+if(reduce){ paint(false); } else { loop(); }
+</script>
 </body>
 </html>
